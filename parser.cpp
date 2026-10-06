@@ -48,10 +48,14 @@ namespace core {
         );
     }
     void Parser::removeEdgeSpaces(std::string& str) const {
-        str.erase(consts::zero, 
-            str.find_first_not_of(consts::trimmingKit)); // start
-        str.erase(
-            str.find_last_not_of(consts::trimmingKit) + 1); // end
+        if (str.empty()) return;
+        const auto start = str.find_first_not_of(consts::trimmingKit);
+        if (start == std::string::npos) {
+            str.clear();
+            return;
+        }
+        const auto end = str.find_last_not_of(consts::trimmingKit);
+        str = str.substr(start, end - start + 1);
     }
     void Parser::parseSectionLine(std::string_view line, std::size_t numberOfLine, std::string& currentSection) {
         if (line.size() < 2 || line.back() != consts::sectionClose)
